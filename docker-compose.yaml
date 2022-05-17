@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  mongo-express:
+    depends_on:
+     mongo:
+       condition: service_healthy
+    build: .
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: "mongo"
+      ME_CONFIG_MONGODB_ADMINUSERNAME: "my_user"
+      ME_CONFIG_MONGODB_ADMINPASSWORD: "my_pass"
+  mongo:
+    image: mongo
+    healthcheck:
+      test: |-
+         echo "db.runCommand({serverStatus:1}).ok" | 
+         mongo admin --username "$$MONGO_INITDB_ROOT_USERNAME" --password "$$MONGO_INITDB_ROOT_PASSWORD" --quiet | 
+         grep 1
+      interval: 15s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: my_user
+      MONGO_INITDB_ROOT_PASSWORD: my_pass
