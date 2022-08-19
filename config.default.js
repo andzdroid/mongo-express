@@ -83,6 +83,7 @@ module.exports = {
     // if a connection string options such as server/port/etc are ignored
     connectionString: mongo.connectionString || getConnectionStringFromEnvVariables(),
 
+    /** @type {import('mongodb').MongoClientOptions} */
     connectionOptions: {
       // ssl: connect to the server using secure SSL
       ssl: process.env.ME_CONFIG_MONGODB_SSL || mongo.ssl,
@@ -93,11 +94,8 @@ module.exports = {
       // sslCA: single PEM file on disk
       sslCA: process.env.ME_CONFIG_MONGODB_CA_FILE,
 
-      // autoReconnect: automatically reconnect if connection is lost
-      autoReconnect: true,
-
-      // poolSize: size of connection pool (number of connections to use)
-      poolSize: 4,
+      // maxPoolSize: size of connection pool (number of connections to use)
+      maxPoolSize: 4,
     },
 
     // set admin to true if you want to turn on admin features
